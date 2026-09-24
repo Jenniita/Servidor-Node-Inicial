@@ -239,6 +239,85 @@ docker rm -f node-jenna
 docker run -d --name node-jenna -p 3000:3000 node-jenna
 ```
 
+## 8. Subir el proyecto a Git y GitHub
+
+Los siguientes comandos se ejecutan desde la carpeta raíz del proyecto, donde se encuentran `app.js`, `Dockerfile` y `package.json`.
+
+### Crear el repositorio local y preparar el primer commit
+
+```powershell
+git init
+git add .
+git commit -m "Primer commit"
+git branch -M main
+```
+
+### Conectar el repositorio local con GitHub
+
+Se creó el repositorio `Servidor-Node-Inicial` en GitHub y se añadió como remoto:
+
+```powershell
+git remote add origin https://github.com/Jenniita/Servidor-Node-Inicial.git
+```
+
+Para comprobar que el remoto está configurado correctamente:
+
+```powershell
+git remote -v
+```
+
+### Subir la rama principal
+
+```powershell
+git push -u origin main
+```
+
+La opción `-u` establece `origin/main` como rama remota predeterminada para los siguientes envíos.
+
+### Unir historiales independientes
+
+Como el repositorio local y el repositorio de GitHub ya tenían commits diferentes, fue necesario permitir la unión de historiales independientes:
+
+```powershell
+git pull origin main --allow-unrelated-histories
+```
+
+Después se guardó el commit de merge y se subió el resultado a GitHub:
+
+```powershell
+git push origin main
+```
+
+La opción `--allow-unrelated-histories` normalmente solo es necesaria en esta primera sincronización.
+
+## 9. Actualizar los cambios en GitHub
+
+Cada vez que se modifique el proyecto, el flujo habitual es:
+
+```powershell
+git status
+git add .
+git commit -m "Describe los cambios realizados"
+git pull origin main
+git push origin main
+```
+
+El comando `git status` permite revisar qué archivos han cambiado. Se recomienda ejecutar `git pull origin main` antes de `git push` para descargar primero los cambios que puedan existir en GitHub.
+
+Si Git informa de conflictos después del `pull`, hay que editar los archivos marcados, guardar la resolución y ejecutar:
+
+```powershell
+git add .
+git commit -m "Resolver conflictos de merge"
+git push origin main
+```
+
+Para consultar el historial de commits:
+
+```powershell
+git log --oneline --all
+```
+
 Finalmente, se recarga `http://localhost:3000` en el navegador. Si el navegador conserva una respuesta anterior, se puede hacer una recarga forzada con `Ctrl + F5`.
 
 ## 8. Comandos útiles
