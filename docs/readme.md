@@ -1,0 +1,309 @@
+# Servidor Node.js con Docker
+
+Este proyecto contiene un servidor web sencillo creado con Node.js, Express y Docker.
+La aplicación responde en la ruta `/` con el texto `Hola, mundo con Node` y escucha en el puerto `3000`.
+
+## Inicio del servidor paso a paso
+
+### Requisitos
+
+1. Tener Docker Desktop instalado y ejecutándose.
+2. Abrir PowerShell en la carpeta raíz del proyecto, donde están `Dockerfile`, `package.json` y `app.js`:
+
+```powershell
+cd "C:\Users\jenna\OneDrive - Digitech\SEGUNDO\Entorno Servidor\Prueba_node_jenna"
+```
+
+### Primer inicio
+
+La primera vez hay que construir la imagen Docker y crear el contenedor:
+
+```powershell
+docker build -t node-jenna .
+docker run -d --name node-jenna -p 3000:3000 node-jenna
+```
+
+Después, abrir esta dirección en el navegador:
+
+```text
+http://localhost:3000
+```
+
+La respuesta esperada es `Hola, mundo con Node`.
+
+### Inicios posteriores
+
+Si el contenedor solo estaba detenido, no es necesario volver a construir la imagen:
+
+```powershell
+docker start node-jenna
+```
+
+Se puede comprobar que está funcionando con:
+
+```powershell
+docker ps
+```
+
+### Después de modificar el código
+
+Como el código se copia dentro de la imagen durante la construcción, hay que reconstruir la imagen y recrear el contenedor:
+
+```powershell
+docker build -t node-jenna .
+docker rm -f node-jenna
+docker run -d --name node-jenna -p 3000:3000 node-jenna
+```
+
+Esto es necesario después de cambiar `app.js`, `package.json` o el `Dockerfile`.
+
+## 1. Estructura del proyecto
+
+```text
+Prueba_node_jenna/
+├── app.js
+├── Dockerfile
+├── package.json
+└── docs/
+		└── readme.md
+```
+
+## 2. Crear la aplicación Node.js
+
+Se creó el proyecto Node.js y se configuró el archivo `package.json` con módulos ES y Express como dependencia:
+
+```json
+{
+  "type": "module",
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
+```
+
+El archivo `app.js` crea el servidor Express, define la ruta principal y abre el puerto `3000`:
+
+```js
+import express from "express";
+const app = express();
+
+app.get("/", (req, res) => {
+  res.send("Hola, mundo con Node");
+});
+
+app.listen(3000);
+```
+
+## 3. Crear el Dockerfile
+
+El archivo `Dockerfile` describe cómo construir la imagen:
+
+```dockerfile
+FROM node
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+CMD ["node", "app.js"]
+```
+
+El proceso de construcción es el siguiente:
+
+1. Se utiliza la imagen oficial de Node.js.
+2. Se establece `/app` como directorio de trabajo dentro del contenedor.
+3. Se copian `package.json` y `package-lock.json`, si existe.
+4. Se instalan las dependencias con `npm install`.
+5. Se copia el resto del proyecto al contenedor.
+6. Se inicia el servidor ejecutando `node app.js`.
+
+## 4. Construir la imagen Docker
+
+Desde la carpeta raíz del proyecto se ejecuta:
+
+```powershell
+docker build -t node-jenna .
+```
+
+El parámetro `-t node-jenna` asigna el nombre `node-jenna` a la imagen. El punto final indica que Docker debe utilizar como contexto la carpeta actual.
+
+## 5. Crear y ejecutar el contenedor
+
+Para iniciar el servidor y publicar su puerto se ejecuta:
+
+```powershell
+docker run -d --name node-jenna -p 3000:3000 node-jenna
+```
+
+## 10. Diferencias entre levantar un servidor PHP y uno Node.js
+
+Aunque los dos servidores pueden ejecutarse dentro de contenedores Docker y verse desde un navegador, el proceso de arranque y la forma de atender las peticiones son diferentes.
+
+### Servidor Node.js
+
+En este proyecto, el propio programa Node.js actúa como servidor web:
+
+1. La imagen parte de Node.js y añade Express mediante `npm install`.
+2. Docker ejecuta `node app.js` cuando se inicia el contenedor.
+3. Express abre el puerto `3000` y queda esperando peticiones.
+4. Cuando llega una petición a `/`, Express ejecuta la función definida en `app.get()`.
+5. La aplicación devuelve directamente el texto con `res.send()`.
+
+El puerto se publica con:
+
+```powershell
+docker run -d --name node-jenna -p 3000:3000 node-jenna
+```
+
+En este caso, el formato es `puerto-del-ordenador:puerto-del-contenedor`, es decir, `3000:3000`.
+
+### Servidor PHP
+
+PHP normalmente no permanece escuchando por sí solo como un servidor web de aplicación. Lo habitual es utilizar Apache o Nginx delante de PHP:
+
+1. La imagen contiene PHP y un servidor web, por ejemplo Apache.
+2. Apache queda iniciado al arrancar el contenedor y escucha normalmente en el puerto `80`.
+3. Cuando el navegador solicita un archivo `.php`, Apache entrega esa petición al intérprete de PHP.
+4. PHP ejecuta el código del archivo y genera una respuesta, normalmente HTML.
+5. Apache devuelve esa respuesta al navegador.
+
+Un contenedor PHP con Apache se suele publicar, por ejemplo, con:
+
+```powershell
+docker run -d --name servidor-php -p 8080:80 imagen-php
+```
+
+En este caso, `8080:80` significa que se accede desde el puerto `8080` del ordenador, aunque Apache esté escuchando en el puerto `80` dentro del contenedor. La dirección sería `http://localhost:8080`.
+
+### Diferencias principales
+
+| Aspecto                               | Node.js con Express                                               | PHP con Apache o Nginx                                                                                  |
+| ------------------------------------- | ----------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| Programa que atiende las peticiones   | La propia aplicación Node.js mediante Express                     | Apache o Nginx, que entrega la petición a PHP                                                           |
+| Comando de inicio                     | `node app.js`                                                     | Se inicia el servidor web y este ejecuta los archivos PHP                                               |
+| Puerto habitual dentro del contenedor | `3000` en este proyecto                                           | `80` con Apache o, en algunos casos, `9000` para PHP-FPM                                                |
+| Archivo principal                     | `app.js`                                                          | Uno o varios archivos `.php`, por ejemplo `index.php`                                                   |
+| Dependencias                          | Se instalan con `npm install`                                     | Se incluyen en la imagen PHP mediante paquetes o extensiones                                            |
+| Respuesta                             | Express la genera con `res.send()`                                | PHP genera el contenido y Apache o Nginx lo entrega                                                     |
+| Actualización del código              | Normalmente hay que reconstruir la imagen y recrear el contenedor | También hay que reconstruirlo si el código se copió durante `docker build`, salvo que se use un volumen |
+
+### Resumen de la diferencia
+
+En Node.js, `app.js` es a la vez el código de la aplicación y el proceso que escucha las peticiones HTTP gracias a Express. Por eso el `Dockerfile` termina ejecutando `node app.js`.
+
+En PHP, el código PHP necesita normalmente un servidor web como Apache o Nginx que permanezca activo. Ese servidor recibe la petición del navegador, ejecuta PHP y devuelve el resultado. Por eso una imagen PHP suele arrancar Apache y se accede normalmente mediante el puerto `80` del contenedor.
+
+La parte común es Docker: en ambos casos se construye una imagen, se crea un contenedor y se publica un puerto con `-p` para que el navegador pueda comunicarse con el servidor.
+
+Significado de los parámetros:
+
+- `-d`: ejecuta el contenedor en segundo plano.
+- `--name node-jenna`: asigna un nombre al contenedor.
+- `-p 3000:3000`: conecta el puerto `3000` del ordenador con el puerto `3000` del contenedor.
+- `node-jenna`: indica la imagen que se va a utilizar.
+
+La aplicación queda disponible en:
+
+```text
+http://localhost:3000
+```
+
+## 6. Comprobar el contenedor
+
+Para comprobar que el contenedor está activo:
+
+```powershell
+docker ps
+```
+
+También se puede comprobar la respuesta del servidor desde PowerShell:
+
+```powershell
+(Invoke-WebRequest -Uri http://localhost:3000/ -UseBasicParsing).Content
+```
+
+La respuesta esperada es:
+
+```text
+Hola, mundo con Node
+```
+
+## 7. Actualizar la aplicación después de cambiar el código
+
+Docker copia los archivos dentro de la imagen durante `docker build`. Por eso, modificar `app.js` no cambia automáticamente un contenedor que ya estaba creado.
+
+Después de modificar el código, se debe reconstruir la imagen y recrear el contenedor:
+
+```powershell
+docker build -t node-jenna .
+docker rm -f node-jenna
+docker run -d --name node-jenna -p 3000:3000 node-jenna
+```
+
+Finalmente, se recarga `http://localhost:3000` en el navegador. Si el navegador conserva una respuesta anterior, se puede hacer una recarga forzada con `Ctrl + F5`.
+
+## 8. Comandos útiles
+
+Ver los registros del servidor:
+
+```powershell
+docker logs node-jenna
+```
+
+Detener el contenedor:
+
+```powershell
+docker stop node-jenna
+```
+
+Volver a iniciarlo sin reconstruir la imagen:
+
+```powershell
+docker start node-jenna
+```
+
+Eliminar el contenedor:
+
+```powershell
+docker rm -f node-jenna
+```
+
+## 9. Cómo se ha levantado el servidor y por qué funciona
+
+El servidor se ha levantado mediante varios pasos que conectan el código de Node.js con el navegador:
+
+1. Docker lee el archivo `Dockerfile` y crea la imagen `node-jenna` a partir de la imagen oficial de Node.js.
+2. Durante la construcción, Docker copia `package.json` al contenedor e instala Express con `npm install`.
+3. Después copia `app.js` dentro del directorio `/app` del contenedor.
+4. Al ejecutar el contenedor, la instrucción `CMD ["node", "app.js"]` inicia el proceso de Node.js.
+5. Node.js ejecuta `app.js`. Express crea la aplicación y empieza a escuchar en el puerto `3000` dentro del contenedor.
+6. La opción `-p 3000:3000` conecta el puerto `3000` del ordenador con el puerto `3000` del contenedor.
+
+Por esta conexión, cuando se escribe `http://localhost:3000` en el navegador, ocurre lo siguiente:
+
+1. El navegador envía una petición HTTP a `localhost`, que representa el ordenador local, usando el puerto `3000`.
+2. Docker recibe la petición en ese puerto y la redirige al puerto `3000` del contenedor `node-jenna`.
+3. El servidor Express recibe la petición en la ruta `/`, porque esa es la dirección que se ha escrito después del puerto.
+4. Esta parte de `app.js` indica cómo responder:
+
+   ```js
+   app.get("/", (req, res) => {
+     res.send("Hola, mundo con Node");
+   });
+   ```
+
+5. `res.send()` envía el texto como respuesta HTTP al navegador.
+6. El navegador recibe la respuesta y muestra `Hola, mundo con Node` en la página.
+
+En resumen, el texto se ve porque está escrito en la respuesta de la ruta `/`, el proceso Node.js está ejecutándose dentro del contenedor y Docker ha publicado correctamente el puerto del contenedor en el ordenador. Si el contenedor no estuviera iniciado, si el puerto no estuviera publicado o si la ruta no existiera, el navegador no mostraría esta respuesta.
+
+### Diferencia entre imagen y contenedor
+
+La imagen Docker es la plantilla que contiene Node.js, Express y los archivos de la aplicación. El contenedor es una instancia en ejecución de esa imagen. El comando `docker build` crea o actualiza la imagen, mientras que `docker run` crea y arranca el contenedor.
+
+Por este motivo, cuando se modifica `app.js`, hay que reconstruir la imagen y crear de nuevo el contenedor para que el cambio se copie dentro de Docker:
+
+```powershell
+docker build -t node-jenna .
+docker rm -f node-jenna
+docker run -d --name node-jenna -p 3000:3000 node-jenna
+```
