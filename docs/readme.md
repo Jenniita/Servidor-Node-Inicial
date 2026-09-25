@@ -11,16 +11,16 @@ La aplicación responde en la ruta `/` con el texto `Hola, mundo con Node` y esc
 2. Abrir PowerShell en la carpeta raíz del proyecto, donde están `Dockerfile`, `package.json` y `app.js`:
 
 ```powershell
-cd "C:\Users\jenna\OneDrive - Digitech\SEGUNDO\Entorno Servidor\Prueba_node_jenna"
+cd "C:\Users\AlumnoM\Desktop\ASIGNATURAS\EntornoServidor\Servidor-Node-Inicial"
 ```
 
 ### Primer inicio
 
-La primera vez hay que construir la imagen Docker y crear el contenedor:
+La primera vez hay que construir la imagen Docker y crear el contenedor. El nombre de la imagen y del contenedor será `servidor-node`:
 
 ```powershell
-docker build -t node-jenna .
-docker run -d --name node-jenna -p 3000:3000 node-jenna
+docker build -t servidor-node .
+docker run -d --name servidor-node -p 3000:3000 servidor-node
 ```
 
 Después, abrir esta dirección en el navegador:
@@ -33,10 +33,10 @@ La respuesta esperada es `Hola, mundo con Node`.
 
 ### Inicios posteriores
 
-Si el contenedor solo estaba detenido, no es necesario volver a construir la imagen:
+Cada vez que se quiera encender el servidor, hay que abrir Docker Desktop y ejecutar PowerShell en la carpeta del proyecto. Si el contenedor ya existe pero está detenido, no es necesario volver a construir la imagen:
 
 ```powershell
-docker start node-jenna
+docker start servidor-node
 ```
 
 Se puede comprobar que está funcionando con:
@@ -45,14 +45,24 @@ Se puede comprobar que está funcionando con:
 docker ps
 ```
 
+Después, abrir `http://localhost:3000` en el navegador.
+
+Para apagarlo al terminar:
+
+```powershell
+docker stop servidor-node
+```
+
+Si el contenedor ya está funcionando, no hay que ejecutar `docker run` otra vez. Basta con abrir el navegador.
+
 ### Después de modificar el código
 
 Como el código se copia dentro de la imagen durante la construcción, hay que reconstruir la imagen y recrear el contenedor:
 
 ```powershell
-docker build -t node-jenna .
-docker rm -f node-jenna
-docker run -d --name node-jenna -p 3000:3000 node-jenna
+docker build -t servidor-node .
+docker rm -f servidor-node
+docker run -d --name servidor-node -p 3000:3000 servidor-node
 ```
 
 Esto es necesario después de cambiar `app.js`, `package.json` o el `Dockerfile`.
@@ -60,7 +70,7 @@ Esto es necesario después de cambiar `app.js`, `package.json` o el `Dockerfile`
 ## 1. Estructura del proyecto
 
 ```text
-Prueba_node_jenna/
+Servidor-Node-Inicial/
 ├── app.js
 ├── Dockerfile
 ├── package.json
@@ -121,20 +131,20 @@ El proceso de construcción es el siguiente:
 Desde la carpeta raíz del proyecto se ejecuta:
 
 ```powershell
-docker build -t node-jenna .
+docker build -t servidor-node .
 ```
 
-El parámetro `-t node-jenna` asigna el nombre `node-jenna` a la imagen. El punto final indica que Docker debe utilizar como contexto la carpeta actual.
+El parámetro `-t servidor-node` asigna el nombre `servidor-node` a la imagen. El punto final indica que Docker debe utilizar como contexto la carpeta actual.
 
 ## 5. Crear y ejecutar el contenedor
 
 Para iniciar el servidor y publicar su puerto se ejecuta:
 
 ```powershell
-docker run -d --name node-jenna -p 3000:3000 node-jenna
+docker run -d --name servidor-node -p 3000:3000 servidor-node
 ```
 
-## 10. Diferencias entre levantar un servidor PHP y uno Node.js
+## 6. Diferencias entre levantar un servidor PHP y uno Node.js
 
 Aunque los dos servidores pueden ejecutarse dentro de contenedores Docker y verse desde un navegador, el proceso de arranque y la forma de atender las peticiones son diferentes.
 
@@ -151,7 +161,7 @@ En este proyecto, el propio programa Node.js actúa como servidor web:
 El puerto se publica con:
 
 ```powershell
-docker run -d --name node-jenna -p 3000:3000 node-jenna
+docker run -d --name servidor-node -p 3000:3000 servidor-node
 ```
 
 En este caso, el formato es `puerto-del-ordenador:puerto-del-contenedor`, es decir, `3000:3000`.
@@ -197,9 +207,9 @@ La parte común es Docker: en ambos casos se construye una imagen, se crea un co
 Significado de los parámetros:
 
 - `-d`: ejecuta el contenedor en segundo plano.
-- `--name node-jenna`: asigna un nombre al contenedor.
+- `--name servidor-node`: asigna un nombre al contenedor.
 - `-p 3000:3000`: conecta el puerto `3000` del ordenador con el puerto `3000` del contenedor.
-- `node-jenna`: indica la imagen que se va a utilizar.
+- `servidor-node`: indica la imagen que se va a utilizar.
 
 La aplicación queda disponible en:
 
@@ -207,7 +217,7 @@ La aplicación queda disponible en:
 http://localhost:3000
 ```
 
-## 6. Comprobar el contenedor
+## 7. Comprobar el contenedor
 
 Para comprobar que el contenedor está activo:
 
@@ -227,19 +237,19 @@ La respuesta esperada es:
 Hola, mundo con Node
 ```
 
-## 7. Actualizar la aplicación después de cambiar el código
+## 8. Actualizar la aplicación después de cambiar el código
 
 Docker copia los archivos dentro de la imagen durante `docker build`. Por eso, modificar `app.js` no cambia automáticamente un contenedor que ya estaba creado.
 
 Después de modificar el código, se debe reconstruir la imagen y recrear el contenedor:
 
 ```powershell
-docker build -t node-jenna .
-docker rm -f node-jenna
-docker run -d --name node-jenna -p 3000:3000 node-jenna
+docker build -t servidor-node .
+docker rm -f servidor-node
+docker run -d --name servidor-node -p 3000:3000 servidor-node
 ```
 
-## 8. Subir el proyecto a Git y GitHub
+## 9. Subir el proyecto a Git y GitHub
 
 Los siguientes comandos se ejecutan desde la carpeta raíz del proyecto, donde se encuentran `app.js`, `Dockerfile` y `package.json`.
 
@@ -290,7 +300,7 @@ git push origin main
 
 La opción `--allow-unrelated-histories` normalmente solo es necesaria en esta primera sincronización.
 
-## 9. Actualizar los cambios en GitHub
+## 10. Actualizar los cambios en GitHub
 
 Cada vez que se modifique el proyecto, el flujo habitual es:
 
@@ -303,6 +313,23 @@ git push origin main
 ```
 
 El comando `git status` permite revisar qué archivos han cambiado. Se recomienda ejecutar `git pull origin main` antes de `git push` para descargar primero los cambios que puedan existir en GitHub.
+
+### Guardar los cambios al terminar de trabajar
+
+Al terminar la sesión, se puede detener el servidor y guardar los cambios en GitHub con estos pasos:
+
+```powershell
+docker stop servidor-node
+git status
+git add .
+git commit -m "Describe los cambios realizados"
+git pull origin main
+git push origin main
+```
+
+Detener Docker no borra los archivos del proyecto. Los comandos `git add`, `git commit` y `git push` son los que guardan los cambios en GitHub. Si no se ha modificado ningún archivo, Git indicará que no hay nada nuevo que guardar.
+
+Al volver a iniciar el servidor, si solo se detuvo el contenedor se puede ejecutar `docker start servidor-node`. Si se modificó `app.js`, `package.json` o el `Dockerfile`, primero hay que reconstruir la imagen y recrear el contenedor siguiendo el apartado 8.
 
 Si Git informa de conflictos después del `pull`, hay que editar los archivos marcados, guardar la resolución y ejecutar:
 
@@ -320,37 +347,37 @@ git log --oneline --all
 
 Finalmente, se recarga `http://localhost:3000` en el navegador. Si el navegador conserva una respuesta anterior, se puede hacer una recarga forzada con `Ctrl + F5`.
 
-## 8. Comandos útiles
+## 11. Comandos útiles
 
 Ver los registros del servidor:
 
 ```powershell
-docker logs node-jenna
+docker logs servidor-node
 ```
 
 Detener el contenedor:
 
 ```powershell
-docker stop node-jenna
+docker stop servidor-node
 ```
 
 Volver a iniciarlo sin reconstruir la imagen:
 
 ```powershell
-docker start node-jenna
+docker start servidor-node
 ```
 
 Eliminar el contenedor:
 
 ```powershell
-docker rm -f node-jenna
+docker rm -f servidor-node
 ```
 
-## 9. Cómo se ha levantado el servidor y por qué funciona
+## 12. Cómo se ha levantado el servidor y por qué funciona
 
 El servidor se ha levantado mediante varios pasos que conectan el código de Node.js con el navegador:
 
-1. Docker lee el archivo `Dockerfile` y crea la imagen `node-jenna` a partir de la imagen oficial de Node.js.
+1. Docker lee el archivo `Dockerfile` y crea la imagen `servidor-node` a partir de la imagen oficial de Node.js.
 2. Durante la construcción, Docker copia `package.json` al contenedor e instala Express con `npm install`.
 3. Después copia `app.js` dentro del directorio `/app` del contenedor.
 4. Al ejecutar el contenedor, la instrucción `CMD ["node", "app.js"]` inicia el proceso de Node.js.
@@ -360,7 +387,7 @@ El servidor se ha levantado mediante varios pasos que conectan el código de Nod
 Por esta conexión, cuando se escribe `http://localhost:3000` en el navegador, ocurre lo siguiente:
 
 1. El navegador envía una petición HTTP a `localhost`, que representa el ordenador local, usando el puerto `3000`.
-2. Docker recibe la petición en ese puerto y la redirige al puerto `3000` del contenedor `node-jenna`.
+2. Docker recibe la petición en ese puerto y la redirige al puerto `3000` del contenedor `servidor-node`.
 3. El servidor Express recibe la petición en la ruta `/`, porque esa es la dirección que se ha escrito después del puerto.
 4. Esta parte de `app.js` indica cómo responder:
 
@@ -382,7 +409,7 @@ La imagen Docker es la plantilla que contiene Node.js, Express y los archivos de
 Por este motivo, cuando se modifica `app.js`, hay que reconstruir la imagen y crear de nuevo el contenedor para que el cambio se copie dentro de Docker:
 
 ```powershell
-docker build -t node-jenna .
-docker rm -f node-jenna
-docker run -d --name node-jenna -p 3000:3000 node-jenna
+docker build -t servidor-node .
+docker rm -f servidor-node
+docker run -d --name servidor-node -p 3000:3000 servidor-node
 ```
