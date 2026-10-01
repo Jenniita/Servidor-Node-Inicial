@@ -1,8 +1,10 @@
 import express from "express";
 const app = express();
 
+app.set("view engine", "ejs")
+
 app.get("/", (req, res) => {
-  res.send("Hola, mundo con Node");
+  res.render("saludo");
 });
 
 app.get("/productos", (req, res) => {

@@ -1,0 +1,15 @@
+<!-- Lección 1 — el mismo saludo, en Node con el motor de plantillas EJS -->
+<!-- views/saludo.ejs -->
+<!-- Este fichero NO se abre directamente: lo procesa Express a través de -->
+<!-- 01-app.js, que es quien de verdad arranca el servidor. -->
+<!doctype html>
+<html>
+  <body>
+    <h1>Bienvenido</h1>
+    <p>
+      Son las <%= new Date().toLocaleTimeString("es-ES", { timeZone: "Europe/Madrid", hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false }) %>
+      <!-- <%= %> es el atajo de EJS para IMPRIMIR un valor: hace lo mismo -->
+      <!-- que <?= ?> en PHP, solo cambia la etiqueta. -->
+    </p>
+  </body>
+</html>
