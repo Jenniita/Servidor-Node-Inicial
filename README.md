@@ -55,10 +55,12 @@ Para repetir el patrón con otros datos o cálculos:
 
 ### Arranque con Docker
 
-`compose.yaml` publica el puerto `3000`, monta el proyecto en `/app` y ejecuta `node --watch app.js`. La primera vez, o si hay que reconstruir la imagen, desde la carpeta del proyecto ejecuta:
+`compose.yaml` publica el puerto `3000`, monta el proyecto en `/app` y ejecuta `node --watch app.js`. Para reconstruir la imagen y volver a iniciar el servicio después de hacer cambios, desde la carpeta del proyecto ejecuta:
 
 ```powershell
 docker compose up --build
 ```
 
-En los siguientes arranques basta con `docker compose up`. Detén el servicio con `Ctrl+C` y visita `http://localhost:3000/ejercicio2`, `/ejercicio3` o `/ejercicio4` para probar los ejercicios. El montaje de volumen hace que los cambios en los archivos estén disponibles dentro del contenedor; las plantillas EJS se vuelven a procesar al solicitar la página.
+Si quieres aplicar los cambios reconstruyendo la imagen cada vez, detén el servicio con `Ctrl+C` y vuelve a ejecutar `docker compose up --build`. Ten en cuenta que no es necesario reconstruir la imagen por cada cambio: mientras el servicio esté ejecutándose, el montaje de volumen y `node --watch` detectan los cambios de código, y las plantillas EJS se vuelven a procesar al recargar la página. Para los siguientes arranques normales basta con `docker compose up`.
+
+Visita `http://localhost:3000/ejercicio2`, `/ejercicio3` o `/ejercicio4` para probar los ejercicios.
