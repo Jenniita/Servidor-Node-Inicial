@@ -57,5 +57,19 @@ app.get("/ejercicio5", (req, res) => {
   })
 });
 
+app.get("/ejercicio6", (req, res) => {
+  const tituloLibro = "El Principito"
+  const precioLibro = 10.90
+  const precioConIva = precioLibro * 1.21
+  const disponible = true
+
+  res.render("ra2/bloque2/ej6", {
+    tituloLibro,
+    precioLibro,
+    precioConIva,
+    disponible,
+  })
+});
+
 
 app.listen(3000);
