@@ -38,6 +38,10 @@ El objeto es el puente entre Express y EJS: cada propiedad queda disponible en l
 
 La ruta `/ejercicio4` reutiliza los datos del libro, calcula `precioConIva` multiplicando `precioLibro` por `1.21` y pasa también el resultado en el objeto de `res.render()`. La plantilla `ej4.ejs` muestra título, precio antes de IVA, precio con IVA y disponibilidad. Así, el cálculo se hace en la ruta y la plantilla se ocupa de presentar los datos.
 
+### Ejercicio 10: comportamiento según NODE_ENV
+
+La ruta `/ejercicio10` lee `process.env.NODE_ENV`. En `compose.yaml`, la directiva `environment` lo establece como `production`: la página indica el modo producción y oculta el diagnóstico. Si se quita temporalmente esa directiva y se recrea el contenedor, `NODE_ENV` queda sin definir y el ejercicio muestra el diagnóstico como modo no producción. Así se compara el comportamiento con y sin la variable de entorno.
+
 Para repetir el patrón con otros datos o cálculos:
 
 1. Define los valores o calcula el resultado en la ruta de Express.
@@ -52,6 +56,7 @@ Para repetir el patrón con otros datos o cálculos:
 - `/ejercicio2` renderiza el ejercicio de expresiones EJS.
 - `/ejercicio3` muestra las variables del libro.
 - `/ejercicio4` muestra los datos del libro y el cálculo del precio con IVA.
+- `/ejercicio10` compara el comportamiento con `NODE_ENV=production` y sin la variable definida.
 
 ### Arranque con Docker
 

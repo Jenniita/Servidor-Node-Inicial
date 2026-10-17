@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>Ejercicio 10 en Node del Bloque 3</h1>
+    <h2>Comportamiento según NODE_ENV</h2>
+    <p>Nombre del libro: <%= libro.titulo %></p>
+    <p>El precio del libro sin IVA: <%= libro.precioBase %></p>
+    <p>El precio del libro con IVA: <%= calcularPrecioConIva(libro.precioBase) %></p>
+    <p>Disponibilidad del libro: <%= libro.disponibilidad ? "Disponible" : "No disponible" %></p>
+    <p>Valor de NODE_ENV: <%= nodeEnv || "no definida" %></p>
+    <% if (esProduccion) { %>
+        <p>Modo producción: la información de diagnóstico está oculta.</p>
+    <% } else { %>
+        <p>Modo no producción: se muestra información de diagnóstico.</p>
+        <p>Diagnóstico: servidor Node escuchando en el puerto 3000.</p>
+    <% } %>
+
+</body>
+
+</html>
