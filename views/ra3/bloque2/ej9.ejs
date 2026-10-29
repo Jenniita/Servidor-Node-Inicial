@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="es">
+<body>
+  <form action="/ra3/ejercicio9" method="get">
+    <input name="busqueda" value="<%= busqueda %>" placeholder="Buscar libro por título">
+    <select name="disponibles">
+      <option value="todos" <%= disponibles === "todos" ? "selected" : "" %>>Todos</option>
+      <option value="si" <%= disponibles === "si" ? "selected" : "" %>>Solo disponibles</option>
+    </select>
+    <button>Buscar</button>
+  </form>
+  <ul>
+    <% libros.forEach(libro => { %>
+      <li><%= libro.titulo %></li>
+    <% }) %>
+  </ul>
+</body>
+</html>

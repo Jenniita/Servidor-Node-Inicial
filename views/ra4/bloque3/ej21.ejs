@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="es">
+<body>
+  <h1>Catálogo de libros</h1>
+  <form action="/ejercicio21" method="get">
+    <input name="busqueda" value="<%= busqueda %>" placeholder="Buscar libro">
+    <button>Buscar</button>
+  </form>
+  <ul>
+    <% libros.forEach(libro => { %>
+      <li><%= libro %></li>
+    <% }) %>
+  </ul>
+</body>
+</html>

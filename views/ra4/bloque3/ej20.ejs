@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="es">
+<body>
+  <h1>GET y POST</h1>
+  <form action="/ejercicio20" method="get">
+    <input name="termino" placeholder="Búsqueda con GET">
+    <button>Enviar con GET</button>
+  </form>
+  <form action="/ejercicio20" method="post">
+    <input name="termino" placeholder="Búsqueda con POST">
+    <button>Enviar con POST</button>
+  </form>
+  <% if (termino) { %><p>Búsqueda: <%= termino %></p><% } %>
+  <p>GET muestra los datos en la URL y sirve para búsquedas. POST los envía en el cuerpo y sirve para enviar datos.</p>
+</body>
+</html>

@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="es">
+<body>
+  <h1>Bolsa de préstamos</h1>
+  <form action="/ejercicio15/apartar">
+    <input name="libro" placeholder="Nombre del libro">
+    <button>Añadir</button>
+  </form>
+  <ul>
+    <% libros.forEach(libro => { %>
+      <li><%= libro %></li>
+    <% }) %>
+  </ul>
+</body>
+</html>

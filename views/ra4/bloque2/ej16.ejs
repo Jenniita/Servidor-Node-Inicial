@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="es">
+<body>
+  <h1>Login</h1>
+  <% if (usuario) { %>
+    <p>Sesión iniciada: <%= usuario.nombre %></p>
+    <a href="/ejercicio17">Cerrar sesión</a>
+  <% } else { %>
+    <p>No has iniciado sesión</p>
+  <% } %>
+  <% if (error) { %><p>Usuario o contraseña incorrectos</p><% } %>
+  <form method="post" action="/ejercicio16">
+    <input name="usuario" placeholder="Usuario">
+    <input name="password" type="password" placeholder="Contraseña">
+    <button>Entrar</button>
+  </form>
+</body>
+</html>

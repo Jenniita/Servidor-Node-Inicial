@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="es">
+<body>
+  <form action="/ra3/ejercicio7" method="get">
+    <input name="busqueda" placeholder="Buscar libro por título">
+    <button>Buscar</button>
+  </form>
+  <% if (busqueda) { %>
+    <p>Resultados para: <%= busqueda %></p>
+  <% } %>
+</body>
+</html>

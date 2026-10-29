@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html lang="es">
+<body>
+  <h1>Catálogo de libros</h1>
+  <% libros.forEach(libro => { %>
+    <h2><%= libro.titulo %></h2>
+    <p>Precio con IVA: <%= precioConIva(libro).toFixed(2) %> €</p>
+    <p>Estado: <%= estadoLibro(libro) %></p>
+  <% }) %>
+</body>
+</html>

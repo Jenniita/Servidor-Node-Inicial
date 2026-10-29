@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="es">
+<body>
+  <h1>Cookie y localStorage</h1>
+  <form action="/ejercicio13/guardar">
+    <input id="termino" name="termino" placeholder="Término de búsqueda">
+    <button>Guardar</button>
+  </form>
+  <p>Tu última búsqueda (cookie): <%= ultimaBusqueda || "ninguna" %></p>
+  <p id="local"></p>
+  <script>
+    document.querySelector("#local").textContent =
+      "Tu última búsqueda (localStorage): " + (localStorage.getItem("ultimaBusqueda") || "ninguna");
+    document.querySelector("form").onsubmit = () =>
+      localStorage.setItem("ultimaBusqueda", document.querySelector("#termino").value);
+  </script>
+</body>
+</html>
