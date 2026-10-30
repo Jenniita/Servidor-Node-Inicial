@@ -192,7 +192,9 @@ app.get("/ejercicio9", (req, res) => {
   });
 });
 
-//Ejercicio 10 
+//EJERCICIOS RA2 - BLOQUE 3
+
+//Ejercicio 10 - 
 app.get("/ejercicio10", (req, res) => {
   const libro = {
     titulo: "El principito",
@@ -225,11 +227,118 @@ app.get("/ejercicio11", (req, res) => {
   })
 });
 
-//EJERCICIOS RA4 - BLOQUE 1
+//EJERCICIOS RA3 - BLOQUE 1
 
 //Ejercicio 1
+app.get("/ra3/ejercicio1", (req, res) => {
+  res.render("ra3/bloque1/ej1", { libro: catalogoRA3[1] });
+});
+
+//Ejercicio 2
+app.get("/ra3/ejercicio2", (req, res) => {
+  const usuario = { activo: true };
+  const libro = catalogoRA3[0];
+  res.render("ra3/bloque1/ej2", {
+    sePuedePrestar: puedePrestarse(usuario, libro)
+  });
+});
+
+//Ejercicio 3
+app.get("/ra3/ejercicio3", (req, res) => {
+  res.render("ra3/bloque1/ej3", { libros: catalogoRA3 });
+});
+
+//Ejercicio 4
+app.get("/ra3/ejercicio4", (req, res) => {
+  const disponibles = catalogoRA3.filter(libro => libro.disponible).length;
+  res.render("ra3/bloque1/ej4", { disponibles, total: catalogoRA3.length });
+});
+
+//Ejercicio 5
+app.get("/ra3/ejercicio5", (req, res) => {
+  res.render("ra3/bloque1/ej5", { libros: catalogoRA3, precioConIva, estadoLibro });
+});
+
+//EJERCICIOS RA3 - BLOQUE 2
+
+//Ejercicio 6
+app.get("/ra3/ejercicio6", (req, res) => {
+  res.render("ra3/bloque2/ej6");
+});
+
+//Ejercicio 7
+app.get("/ra3/ejercicio7", (req, res) => {
+  res.render("ra3/bloque2/ej7", { busqueda: req.query.busqueda || "" });
+});
+
+//Ejercicio 8
+app.get("/ra3/ejercicio8", (req, res) => {
+  const busqueda = (req.query.busqueda || "").toLowerCase();
+  const libros = catalogoRA3.filter(libro =>
+    libro.titulo.toLowerCase().includes(busqueda)
+  );
+  res.render("ra3/bloque2/ej8", { libros, busqueda: req.query.busqueda || "" });
+});
+
+//Ejercicio 9
+app.get("/ra3/ejercicio9", (req, res) => {
+  const busqueda = (req.query.busqueda || "").toLowerCase();
+  const disponibles = req.query.disponibles || "todos";
+  const libros = catalogoRA3.filter(libro =>
+    libro.titulo.toLowerCase().includes(busqueda) &&
+    (disponibles === "todos" || libro.disponible)
+  );
+  res.render("ra3/bloque2/ej9", {
+    libros,
+    busqueda: req.query.busqueda || "",
+    disponibles
+  });
+});
+
+//Ejercicio 10
+app.get("/ra3/ejercicio10", (req, res) => {
+  const busqueda = (req.query.busqueda || "").toLowerCase();
+  const disponibles = req.query.disponibles || "todos";
+  const libros = catalogoRA3.filter(libro =>
+    libro.titulo.toLowerCase().includes(busqueda) &&
+    (disponibles === "todos" || libro.disponible)
+  );
+  res.render("ra3/bloque2/ej10", {
+    libros,
+    busqueda: req.query.busqueda || "",
+    disponibles
+  });
+});
+
+//EJERCICIOS RA3 - BLOQUE 3
+//Ejercicio 11
+app.get("/ra3/ejercicio11", (req, res) => {
+  res.render("ra3/bloque3/ej11", { busqueda: req.query.busqueda || "" });
+});
+
+app.post("/ra3/ejercicio11", (req, res) => {
+  res.render("ra3/bloque3/ej11", { busqueda: req.body.busqueda || "" });
+});
+
+//Ejercicio 12
+app.get("/ra3/ejercicio12", (req, res) => {
+  const busqueda = (req.query.busqueda || "").toLowerCase();
+  const libros = [];
+
+  for (const libro of catalogoRA3) {
+    if (libro.titulo.toLowerCase().includes(busqueda)) libros.push(libro);
+  }
+
+  res.render("ra3/bloque3/ej12", { libros, busqueda: req.query.busqueda || "" });
+});
+
+//EJERCICIOS RA4 - BLOQUE 1
+
+//Ejercicio 12
 app.get("/ejercicio12", (req, res) => {
+  //Creamos una variable de visitas que inicializamos en 0
   let visitas = 0;
+  //Y luego queremos que a esa variable se le sume 1
   visitas = visitas + 1;
 
   res.render("ra4/bloque1/ej12", {
@@ -237,24 +346,27 @@ app.get("/ejercicio12", (req, res) => {
   })
 });
 
-
+//Ejercicio 13
 app.get("/ejercicio13", (req, res) => {
   res.render("ra4/bloque1/ej13", {
     ultimaBusqueda: req.cookies.ultimaBusqueda
   });
 });
 
+
 app.get("/ejercicio13/guardar", (req, res) => {
   res.cookie("ultimaBusqueda", req.query.termino, { maxAge: 1000 * 60 * 60 * 24 * 30 });
   res.redirect("/ejercicio13");
 });
 
+//Ejercicio 14
 app.get("/ejercicio14", (req, res) => {
   req.session.visitas = (req.session.visitas || 0) + 1;
   res.render("ra4/bloque1/ej14",
     { visitas: req.session.visitas });
 });
 
+//Ejercicio 15
 app.get("/ejercicio15", comprobarSesion, (req, res) => {
   res.render("ra4/bloque1/ej15", { libros: req.session.libros || [] });
 });
@@ -265,6 +377,8 @@ app.get("/ejercicio15/apartar", comprobarSesion, (req, res) => {
   res.redirect("/ejercicio15");
 });
 
+//EJERCICIOS RA4 - BLOQUE 2
+//Ejercicio 16
 app.get("/ejercicio16", (req, res) => {
   res.render("ra4/bloque2/ej16", {
     usuario: req.session.usuario,
@@ -288,6 +402,7 @@ app.post("/ejercicio16", (req, res) => {
   res.redirect(usuario.rol === "admin" ? "/ejercicio19" : "/ejercicio18");
 });
 
+//Ejercicio 17
 app.get("/ejercicio17", (req, res, next) => {
   req.session.destroy((error) => {
     if (error) return next(error);
@@ -295,6 +410,7 @@ app.get("/ejercicio17", (req, res, next) => {
   });
 });
 
+//Ejercicio 18
 app.get("/ejercicio18", comprobarSesion, (req, res) => {
   res.render("ra4/bloque2/ej18", { libros: req.session.libros || [] });
 });
@@ -305,10 +421,13 @@ app.get("/ejercicio18/apartar", comprobarSesion, (req, res) => {
   res.redirect("/ejercicio18");
 });
 
+//Ejercicio 19
 app.get("/ejercicio19", comprobarAdmin, (req, res) => {
   res.render("ra4/bloque2/ej19");
 });
 
+//EJERCICIO RA4 - BLOQUE 3
+//Ejercicio 20
 app.get("/ejercicio20", (req, res) => {
   res.render("ra4/bloque3/ej20", { termino: req.query.termino });
 });
@@ -317,6 +436,7 @@ app.post("/ejercicio20", (req, res) => {
   res.render("ra4/bloque3/ej20", { termino: req.body.termino });
 });
 
+//Ejercicio 21
 app.get("/ejercicio21", (req, res) => {
   const catalogo = ["El Principito", "Un monstruo viene a verme", "Invisible"];
   const busqueda = req.query.busqueda || "";
@@ -327,92 +447,6 @@ app.get("/ejercicio21", (req, res) => {
   res.render("ra4/bloque3/ej21", { libros, busqueda });
 });
 
-app.get("/ra3/ejercicio1", (req, res) => {
-  res.render("ra3/bloque1/ej1", { libro: catalogoRA3[1] });
-});
 
-app.get("/ra3/ejercicio2", (req, res) => {
-  const usuario = { activo: true };
-  const libro = catalogoRA3[0];
-  res.render("ra3/bloque1/ej2", {
-    sePuedePrestar: puedePrestarse(usuario, libro)
-  });
-});
-
-app.get("/ra3/ejercicio3", (req, res) => {
-  res.render("ra3/bloque1/ej3", { libros: catalogoRA3 });
-});
-
-app.get("/ra3/ejercicio4", (req, res) => {
-  const disponibles = catalogoRA3.filter(libro => libro.disponible).length;
-  res.render("ra3/bloque1/ej4", { disponibles, total: catalogoRA3.length });
-});
-
-app.get("/ra3/ejercicio5", (req, res) => {
-  res.render("ra3/bloque1/ej5", { libros: catalogoRA3, precioConIva, estadoLibro });
-});
-
-app.get("/ra3/ejercicio6", (req, res) => {
-  res.render("ra3/bloque2/ej6");
-});
-
-app.get("/ra3/ejercicio7", (req, res) => {
-  res.render("ra3/bloque2/ej7", { busqueda: req.query.busqueda || "" });
-});
-
-app.get("/ra3/ejercicio8", (req, res) => {
-  const busqueda = (req.query.busqueda || "").toLowerCase();
-  const libros = catalogoRA3.filter(libro =>
-    libro.titulo.toLowerCase().includes(busqueda)
-  );
-  res.render("ra3/bloque2/ej8", { libros, busqueda: req.query.busqueda || "" });
-});
-
-app.get("/ra3/ejercicio9", (req, res) => {
-  const busqueda = (req.query.busqueda || "").toLowerCase();
-  const disponibles = req.query.disponibles || "todos";
-  const libros = catalogoRA3.filter(libro =>
-    libro.titulo.toLowerCase().includes(busqueda) &&
-    (disponibles === "todos" || libro.disponible)
-  );
-  res.render("ra3/bloque2/ej9", {
-    libros,
-    busqueda: req.query.busqueda || "",
-    disponibles
-  });
-});
-
-app.get("/ra3/ejercicio10", (req, res) => {
-  const busqueda = (req.query.busqueda || "").toLowerCase();
-  const disponibles = req.query.disponibles || "todos";
-  const libros = catalogoRA3.filter(libro =>
-    libro.titulo.toLowerCase().includes(busqueda) &&
-    (disponibles === "todos" || libro.disponible)
-  );
-  res.render("ra3/bloque2/ej10", {
-    libros,
-    busqueda: req.query.busqueda || "",
-    disponibles
-  });
-});
-
-app.get("/ra3/ejercicio11", (req, res) => {
-  res.render("ra3/bloque3/ej11", { busqueda: req.query.busqueda || "" });
-});
-
-app.post("/ra3/ejercicio11", (req, res) => {
-  res.render("ra3/bloque3/ej11", { busqueda: req.body.busqueda || "" });
-});
-
-app.get("/ra3/ejercicio12", (req, res) => {
-  const busqueda = (req.query.busqueda || "").toLowerCase();
-  const libros = [];
-
-  for (const libro of catalogoRA3) {
-    if (libro.titulo.toLowerCase().includes(busqueda)) libros.push(libro);
-  }
-
-  res.render("ra3/bloque3/ej12", { libros, busqueda: req.query.busqueda || "" });
-});
 
 app.listen(3000);
